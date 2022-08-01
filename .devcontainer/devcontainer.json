@@ -1,0 +1,9 @@
+{
+	"image": "determinedai/environments:cuda-10.2-pytorch-1.7-tf-1.15-gpu-0.18.2",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=delegated",
+	"workspaceFolder": "/workspace",
+	"runArgs": [
+		"--network=host",
+		"--gpus=all"
+	]
+}
