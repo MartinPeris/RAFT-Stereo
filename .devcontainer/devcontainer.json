@@ -4,6 +4,7 @@
 	"workspaceFolder": "/workspace",
 	"runArgs": [
 		"--network=host",
-		"--gpus=all"
+		"--gpus=all",
+		"--ipc=host"
 	]
 }
