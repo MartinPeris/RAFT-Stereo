@@ -92,7 +92,7 @@ def fetch_dataloader(args):
     if hasattr(args, "do_flip") and args.do_flip is not None:
         aug_params["do_flip"] = args.do_flip
 
-    train_dataset = UniversalStereoDataset(args, root_path="data/ETH3D/universal_stereo_dataset_original_size", file_list_path="samples.csv")
+    train_dataset = UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/ETH3D", file_list_path="samples.csv")
 
     train_loader = data.DataLoader(train_dataset, batch_size=args.batch_size, 
         pin_memory=True, shuffle=True, num_workers=int(os.environ.get('SLURM_CPUS_PER_TASK', 6))-2, drop_last=True)
