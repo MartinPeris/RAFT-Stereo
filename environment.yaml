@@ -17,3 +17,5 @@ dependencies:
   - imageio
   - scikit-image
   - p7zip
+  - pip:
+    - justpfm

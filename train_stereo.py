@@ -10,10 +10,10 @@ from torch.utils.tensorboard import SummaryWriter
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from core.raft_stereo import RAFTStereo
+from core.raft_universal_stereo import RAFTUniversalStereo
 
 from evaluate_stereo import *
-import core.stereo_datasets as datasets
+import core.universal_stereo_dataset as datasets
 
 try:
     from torch.cuda.amp import GradScaler
@@ -131,7 +131,7 @@ class Logger:
 
 def train(args):
 
-    model = nn.DataParallel(RAFTStereo(args))
+    model = nn.DataParallel(RAFTUniversalStereo(args))
     print("Parameter Count: %d" % count_parameters(model))
 
     train_loader = datasets.fetch_dataloader(args)
