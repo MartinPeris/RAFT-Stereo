@@ -272,7 +272,6 @@ class MultiBasicEncoder(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x, dual_inp=False, num_layers=3):
-
         x = self.conv1(x)
         x = self.norm1(x)
         x = self.relu1(x)

@@ -46,20 +46,17 @@ class UniversalStereoDataset(data.Dataset):
         index = index % len(self.file_list)
         img1 = justpfm.read_pfm(self.file_list[index][0])
         img2 = justpfm.read_pfm(self.file_list[index][1])
-        disp = justpfm.read_pfm(self.file_list[index][2])
+        disp = np.squeeze(justpfm.read_pfm(self.file_list[index][2]))
         valid = Image.open(self.file_list[index][3])
-        
-        print(f"left:{img1.shape} right:{img2.shape} disp:{disp.shape} valid:{np.array(valid).shape}")
-
 
         flow = np.stack([-disp, np.zeros_like(disp)], axis=-1)
 
         #if self.augmentor is not None:
         #    img1, img2, flow, valid = self.augmentor(img1, img2, flow, valid)
             
-        img1 = torch.from_numpy(img1.copy()).float()
-        img2 = torch.from_numpy(img2.copy()).float()
-        flow = torch.from_numpy(flow.copy()).float()
+        img1 = torch.from_numpy(img1.copy()).permute(2, 0, 1).float()
+        img2 = torch.from_numpy(img2.copy()).permute(2, 0, 1).float()
+        flow = torch.from_numpy(flow.copy()).permute(2, 0, 1).float()
         valid = torch.from_numpy(np.array(valid).copy()).float()
 
         if self.img_pad is not None:
@@ -92,7 +89,20 @@ def fetch_dataloader(args):
     if hasattr(args, "do_flip") and args.do_flip is not None:
         aug_params["do_flip"] = args.do_flip
 
-    train_dataset = UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/ETH3D", file_list_path="samples.csv")
+    train_dataset = UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/CREStereo", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/ETH3D", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/FallingThings/mixed", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/FallingThings/single", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/KITTI2012", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/KITTI2015", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/MPI-sintel/clean", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/MPI-sintel/final", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/Middlebury2006", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/Middlebury2014", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/Middlebury2021", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/NewTsukuba", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/SceneFlow", file_list_path="samples.csv")
+    train_dataset += UniversalStereoDataset(args, root_path="data/universal_stereo_dataset/TartanAir", file_list_path="samples.csv")
 
     train_loader = data.DataLoader(train_dataset, batch_size=args.batch_size, 
         pin_memory=True, shuffle=True, num_workers=int(os.environ.get('SLURM_CPUS_PER_TASK', 6))-2, drop_last=True)

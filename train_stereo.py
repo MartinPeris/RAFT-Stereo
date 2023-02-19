@@ -131,7 +131,7 @@ class Logger:
 
 def train(args):
 
-    model = nn.DataParallel(RAFTUniversalStereo(args))
+    model = nn.DataParallel(RAFTUniversalStereo(args), device_ids=[0, 1, 2, 3])
     print("Parameter Count: %d" % count_parameters(model))
 
     train_loader = datasets.fetch_dataloader(args)

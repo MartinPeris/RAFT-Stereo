@@ -5,6 +5,7 @@ import argparse
 import glob
 import numpy as np
 import torch
+from justpfm import justpfm
 from tqdm import tqdm
 from pathlib import Path
 from raft_stereo import RAFTStereo
@@ -15,9 +16,15 @@ from matplotlib import pyplot as plt
 
 DEVICE = 'cuda'
 
+def is_pfm_image(file_name):
+    return Path(file_name).suffix == ".pfm"
+
 def load_image(imfile):
-    img = np.array(Image.open(imfile)).astype(np.uint8)
-    img = torch.from_numpy(img).permute(2, 0, 1).float()
+    if is_pfm_image(imfile):
+        img = justpfm.read_pfm(imfile)
+    else:
+        img = np.array(Image.open(imfile)).astype(np.uint8)
+    img = torch.from_numpy(img.copy()).permute(2, 0, 1).float()
     return img[None].to(DEVICE)
 
 def demo(args):
