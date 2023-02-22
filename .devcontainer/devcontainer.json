@@ -5,6 +5,8 @@
 	"runArgs": [
 		"--network=host",
 		"--gpus=all",
-		"--ipc=host"
+		"--ipc=host",
+		"-e", "DISPLAY=${env:DISPLAY}",
+        "-v", "/tmp/.X11-unix:/tmp/.X11-unix"
 	]
 }
